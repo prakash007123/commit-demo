@@ -1,0 +1,24 @@
+name: Commit Message Lint
+
+on:
+  push:
+    branches:
+      - main
+      - 'feature/*'
+      - 'bugfix/*'
+
+jobs:
+  commit-message-lint:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Get commit messages
+        run: |
+          commit_messages=$(git log --format=%B --no-merges -n 5)
+          echo "$commit_messages"
+          if [[ ! "$commit_messages" =~ [Commit@123DEmo] ]]; then
+            echo "Invalid commit message format detected."
+            exit 1
